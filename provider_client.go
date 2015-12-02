@@ -228,6 +228,10 @@ func (client *ProviderClient) Request(method, url string, options RequestOpts) (
 	if options.JSONResponse != nil {
 		defer resp.Body.Close()
 		if err := json.NewDecoder(resp.Body).Decode(options.JSONResponse); err != nil {
+			rendered, _ := json.Marshal(options.JSONResponse)
+			if string(rendered) == "null" {
+				return nil, nil
+			}
 			return nil, err
 		}
 	}
